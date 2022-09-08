@@ -4,7 +4,7 @@ This module takes care of starting the API Server, Loading the DB and Adding the
 from flask import Flask, request, jsonify, url_for, Blueprint
 from api.models import db, User
 from api.utils import generate_sitemap, APIException
-from flask_jwt_extended import create_access_token
+from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity
 
 
 api = Blueprint('api', __name__)
@@ -25,7 +25,7 @@ def signup():
     data = request.get_json()
     user = User.query.filter_by(email = data.get("email")).first()
     if user is not None:
-        return "El usuario ya existe", 404
+        return jsonify({"mensaje": "El usuario ya existe"}), 404
     new_user = User(
         email = data.get("email"), 
         password = data.get("password"),
@@ -40,7 +40,17 @@ def login():
     data = request.get_json()
     user = User.query.filter_by(email = data.get("email"), password = data.get("password")).first()
     if user is None:
-        return "El usuario no existe", 401
+        return jsonify({"mensaje": "El usuario no existe"}), 401
     access_token = create_access_token(identity=user.id)
     return jsonify({ "token": access_token, "user_id": user.id }),200
     
+# Protege una ruta con jwt_required, bloquea las peticiones
+# sin un JWT válido presente.
+@api.route("/protected", methods=["GET"])
+@jwt_required()
+def protected():
+    # Accede a la identidad del usuario actual con get_jwt_identity
+    current_user_id = get_jwt_identity()
+    user = User.filter.get(current_user_id)
+    
+    return jsonify({"id": user.id, "username": user.username }), 200

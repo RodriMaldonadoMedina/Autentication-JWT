@@ -23,7 +23,10 @@ const Login = () => {
       body: JSON.stringify(datos)
     })
     .then(resp=>resp.json())
-    .then(data=>console.log(data))
+    .then(data=>{
+        console.log(data);
+        sessionStorage.setItem("token",data.token);
+    })
     .catch((error)=>{console.log(error)});
   }
 
