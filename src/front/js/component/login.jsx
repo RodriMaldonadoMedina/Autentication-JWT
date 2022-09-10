@@ -1,7 +1,11 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
+import { Context } from "../store/appContext";
+import { useNavigate } from "react-router-dom"
 
 const Login = () => {
   const [datos, setDatos] = useState({});
+  const { actions} = useContext(Context);
+  const navigate = useNavigate();
 
   function inputChange(e){
     setDatos({...datos, [e.target.type]: e.target.value})
@@ -9,25 +13,10 @@ const Login = () => {
 
   function datosCargados(e){
     e.preventDefault();
-    console.log(datos);
-    loguearUsuario();
-  }
-
-  function loguearUsuario(){
-    fetch(process.env.BACKEND_URL + '/api/login', 
-    {
-      method : 'POST',
-      headers : {
-        "content-type" : "application/json"
-      },
-      body: JSON.stringify(datos)
-    })
-    .then(resp=>resp.json())
-    .then(data=>{
-        console.log(data);
-        sessionStorage.setItem("token",data.token);
-    })
-    .catch((error)=>{console.log(error)});
+    actions.loguearUsuario(datos);
+    setTimeout(()=>{
+      navigate("/userpage")
+    }, 500)
   }
 
   return (

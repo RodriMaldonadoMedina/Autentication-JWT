@@ -1,7 +1,12 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
+import { Context } from "../store/appContext";
+import { useNavigate } from "react-router-dom";
+
 
 const Registro = () => {
   const [datos, setDatos] = useState({});
+  const { actions } = useContext(Context)
+  const nav = useNavigate();
 
   function inputChange(e) {
     setDatos({ ...datos, [e.target.type]: e.target.value });
@@ -10,21 +15,10 @@ const Registro = () => {
   function datosCargados(e) {
     e.preventDefault();
     console.log(datos);
-    cargarUsuario();
-  }
-
-  function cargarUsuario() {
-    fetch(process.env.BACKEND_URL + "/api/signup", {
-      method: "POST",
-      headers: {
-        "content-type": "application/json",
-      },
-      body: JSON.stringify(datos),
-    })
-      .then((resp) => resp.json())
-      .catch((error) => {
-        console.log(error);
-      });
+    actions.cargarUsuario(datos);
+    setTimeout(()=>{
+      nav("/");
+    },500)
   }
 
   return (
