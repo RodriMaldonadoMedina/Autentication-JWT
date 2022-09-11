@@ -73,6 +73,8 @@ const getState = ({ getStore, getActions, setStore }) => {
 					}
 				})
 				.then(resp=>resp.json())
+				/////////////////////////////////////////////////////////
+				//como agregar el data a user si tengo nombres distintos?
 				.then(data=>setStore({user:data}))
 				.catch(error=>console.log(error));
 			  },

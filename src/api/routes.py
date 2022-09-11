@@ -50,7 +50,6 @@ def protected():
     # Accede a la identidad del usuario actual con get_jwt_identity
     current_user_id = get_jwt_identity()
     user = User.query.get(current_user_id)
-    
     return jsonify({"id": user.id, "email": user.email }), 200
 
 @api.route('/logout', methods=['DELETE'])
