@@ -48,11 +48,14 @@ const getState = ({ getStore, getActions, setStore }) => {
 				})
 				.then(resp => {
 					if(resp.status === 401){
-						console.log("Invalid credentials")
+						throw new Error("Invalid credentials");
 				    }
 				    else if(resp.status === 400){
-						console.log("Invalid email or password format")
+						throw new Error("Invalid email or password format");
 				    }
+					else if (resp.status !== 200){
+						throw new Error();
+					}
 					return resp.json()
 				})
 				.then( data => {
