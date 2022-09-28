@@ -22,7 +22,7 @@ def handleHello():
 
 @api.route("/signup", methods=["POST"])
 def signup():
-    data = request.get_json()
+    data = request.get_json()  #request es lo que yo envio desde el frontend
     user = User.query.filter_by(email = data.get("email")).first()
     if user is not None:
         return jsonify({"mensaje": "El usuario ya existe"}), 404
@@ -33,11 +33,13 @@ def signup():
     )
     db.session.add(new_user)
     db.session.commit()
-    return jsonify(new_user.serialize()),200
+    return jsonify(new_user.serialize()),200 #siempre devolver un formato json
    
 @api.route("/login", methods=['POST'])
 def login():
     data = request.get_json()
+    # email = request.json.get("email",None)
+    # password = request.json.get("password",None)
     user = User.query.filter_by(email = data.get("email"), password = data.get("password")).first()
     if user is None:
         return jsonify({"mensaje": "El usuario no existe"}), 401

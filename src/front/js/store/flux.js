@@ -76,6 +76,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 				/////////////////////////////////////////////////////////
 				//como agregar el data a user si tengo nombres distintos?
 				.then(data=>setStore({user:data}))
+				//.then(data=>setStore({...user, email: data.email})
 				.catch(error=>console.log(error));
 			  },
 
@@ -92,7 +93,8 @@ const getState = ({ getStore, getActions, setStore }) => {
 				  .then((data) => {
 					setStore({token: null});
 					sessionStorage.removeItem("token");
-				  });
+				  })
+				  .catch(error=>console.log(error));
 			  }
 			
 		}

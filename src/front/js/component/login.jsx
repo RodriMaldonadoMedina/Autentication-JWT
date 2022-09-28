@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom"
 
 const Login = () => {
   const [datos, setDatos] = useState({});
-  const { actions} = useContext(Context);
+  const { store, actions} = useContext(Context);
   const navigate = useNavigate();
 
   function inputChange(e){
@@ -15,8 +15,12 @@ const Login = () => {
     e.preventDefault();
     actions.loguearUsuario(datos);
     setTimeout(()=>{
-      navigate("/userpage")
-    }, 500)
+      if (store.token !== null){
+        console.log("se logueo correctamente")
+        navigate('/userpage');
+    }
+    else console.log("Algo salio mal al loguear")
+    }, 1000)
   }
 
   return (
